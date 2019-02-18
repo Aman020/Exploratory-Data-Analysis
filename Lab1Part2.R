@@ -24,8 +24,8 @@ influenza_national_summary <- function( filedata) {
   data <- data.frame(week,totalA, totalB, percentA,percentB,percentPositive)
   
   p <- plot_ly(data) %>%
-    add_trace(x=~week, y = ~totalA, type="bar", name = "Total A", color = I("green")) %>%
-    add_trace(x=~week, y=~totalB, type = 'bar', name = 'Total B', color = I("yellow")) %>%
+    add_trace(x=~week, y = ~totalA, type="bar", name = "Total A", color = I("yellow")) %>%
+    add_trace(x=~week, y=~totalB, type = 'bar', name = 'Total B', color = I("green")) %>%
     add_trace(x=~week,y = ~percentA, type="scatter", mode="lines", name="Percentage A", color = I("orange"), yaxis='y2',line=list(dash="dash")) %>%
     add_trace(x=~week,y = ~percentB, type="scatter", mode="lines",name="Percentage B", color = I("green"), yaxis='y2', line=list(dash="dash")) %>%
     add_trace(x=~week,y = ~percentPositive, type="scatter", mode="lines", name="Total Percentage", color = I("black"), yaxis='y2') %>%
@@ -34,7 +34,40 @@ influenza_national_summary <- function( filedata) {
 return (p)  
 }
 
-influenza_positive_tested <-function(publicHealthfiledata){
+influenza_positive_tested <-function(publicHealthfiledata, isNY = FALSE){
+  isNY
+  if (isNY)
+  {
+    
+    library(plotly)
+    positive_test <- publicHealthfiledata
+    noOfPositiveSpecimen <- positive_test$TOTAL.SPECIMENS
+    aH1N1<-positive_test$A..2009.H1N1.
+    aH3<-positive_test$A..H3.
+    aSubtypyingNotPerformed<-positive_test$A..Subtyping.not.Performed.
+    b<-positive_test$B
+    bvc<-positive_test$BVic
+    byam<-positive_test$BYam
+    h3n2v<-positive_test$H3N2v
+    
+    data<- data.frame(aSubtypyingNotPerformed,aH1N1,aH3,h3n2v,b,bvc,byam)
+    
+    pNY <- plot_ly(data)%>%
+      add_trace(y=~aSubtypyingNotPerformed,type="bar",name="A(subtyping not performed)", color =I("yellow"))%>% 
+      add_trace(y=~aH1N1,type="bar",name="A(H1N1)pdm09", color =I("orange"))%>%
+      add_trace(y=~aH3,type="bar",name="A(H3N2)", color =I("red"))%>%
+      add_trace(y=~h3n2v,type="bar",name="H3N2V", color =I("purple"))%>%
+      add_trace(y=~b,type="bar",name="B(lineage not performend)", color =I("blue"))%>%
+      add_trace(y=~bvc,type="bar",name="B(Victoria Lineage)", color =I("green"))%>%
+      add_trace(y=~byam,type="bar",name="B(Yamagata Lineage)", color =I("dark green"))%>%
+      layout( title = 'Influenza Positive Tests Reported to CDC by US-Public Health Lab, National Summary 2017-2018-NY',xaxis= list(title = 'Weeks'),yaxis = list(title = 'Number of Positive Specimens '), barmode = "stack",font=t)
+    return(pNY)
+    
+    
+  }
+  
+  else
+  {
   t <- list(
     size =7)
   
@@ -51,7 +84,7 @@ influenza_positive_tested <-function(publicHealthfiledata){
   byam<-positive_test$BYam
   h3n2v<-positive_test$H3N2v
   
-  data<- data.frame(aSubtypyingNotPerformed,a,aH3,h3n2v,b,bvc,byam)
+  data<- data.frame(aSubtypyingNotPerformed,aH1N1,aH3,h3n2v,b,bvc,byam)
   
   p2 <- plot_ly(data)%>%
     add_trace(x=~week,y=~aSubtypyingNotPerformed,type="bar",name="A(subtyping not performed)", color =I("yellow"))%>% 
@@ -63,6 +96,7 @@ influenza_positive_tested <-function(publicHealthfiledata){
     add_trace(x=~week,y=~byam,type="bar",name="B(Yamagata Lineage)", color =I("dark green"))%>%
     layout( title = 'Influenza Positive Tests Reported to CDC by US-Public Health Lab, National Summary 2017-2018',xaxis= list(title = 'Weeks'),yaxis = list(title = 'Number of Positive Specimens '), barmode = "stack",font=t)
   return(p2)
+  }
 }
 
 
@@ -86,7 +120,7 @@ graph_public_health
 #--------------------------NY State Influenza Positive Tested----------------------------------------------
 
 nyPublicHealthData <-read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data-NY/WHO_NREVSS_Public_Health_Labs.csv',skip=1)
-ny_graph_public_health <-influenza_positive_tested(nyPublicHealthData)
+ny_graph_public_health <-influenza_positive_tested(nyPublicHealthData,TRUE)
 ny_graph_public_health
 
 
