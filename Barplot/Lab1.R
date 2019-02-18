@@ -157,4 +157,14 @@ axis(
   las = 0
 )
 
+grid(nx = 2, ny = NULL)
+legend(
+  "topright",
+  inset = c(.1, 0),
+  c("A(subtyping not performed)", "A(H1N1)pdm09", "A(H3N2)", "H3N2v", "B (lineage not performed)", "B (Victoria Linage)", "B(Yamagata Lineage)"),
+  col = c("yellow", "orange", "red", "purple", "dark green", "green", "light green"),
+  pch = c(15, 15, 15, 15, 15, 15, 15),
+  bty = "n"
+)
+
 ###################
