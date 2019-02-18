@@ -31,7 +31,6 @@ influenza_national_summary <- function( filedata) {
     add_trace(x=~week,y = ~percentPositive, type="scatter", mode="lines", name="Total Percentage", color = I("black"), yaxis='y2') %>%
     layout( title = 'Influenza Positive Tests Reported to CDC by US-Cln-Lab, National Summary 2017-2018',yaxis = list(title = 'Total Positive Specimens '),  yaxis2=second_yaxis, barmode = "stack",font=t)
   p
-return (p)  
 }
 
 influenza_positive_tested <-function(publicHealthfiledata, isNY = FALSE){
@@ -95,33 +94,23 @@ influenza_positive_tested <-function(publicHealthfiledata, isNY = FALSE){
     add_trace(x=~week,y=~bvc,type="bar",name="B(Victoria Lineage)", color =I("green"))%>%
     add_trace(x=~week,y=~byam,type="bar",name="B(Yamagata Lineage)", color =I("dark green"))%>%
     layout( title = 'Influenza Positive Tests Reported to CDC by US-Public Health Lab, National Summary 2017-2018',xaxis= list(title = 'Weeks'),yaxis = list(title = 'Number of Positive Specimens '), barmode = "stack",font=t)
-  return(p2)
+ p2
   }
 }
 
 
 #----------------------------National Summary----------------------------------------------------------
-nationalFileData <-read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data/WHO_NREVSS_Clinical_Labs.csv')
-graph_national_summary<-influenza_national_summary(nationalFileData)
-graph_national_summary
-
+influenza_national_summary(read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data/WHO_NREVSS_Clinical_Labs.csv'))
 
 #----------------------------NY State Summary-------------------------------------------------------------
-nyFileData <-read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data-NY/WHO_NREVSS_Clinical_Labs.csv',skip=1)
-graph_ny_summary<-influenza_national_summary(nyFileData)
-graph_ny_summary
+influenza_national_summary(read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data-NY/WHO_NREVSS_Clinical_Labs.csv',skip=1))
 
 #--------------------------- Influenza Positive Tested-----------------------------------------------------
-publicHealthData <-read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data/WHO_NREVSS_Public_Health_Labs.csv')
-graph_public_health <-influenza_positive_tested(publicHealthData)
-graph_public_health
-
+influenza_positive_tested(read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data/WHO_NREVSS_Public_Health_Labs.csv'))
 
 #--------------------------NY State Influenza Positive Tested----------------------------------------------
+influenza_positive_tested(read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data-NY/WHO_NREVSS_Public_Health_Labs.csv',skip=1),TRUE)
 
-nyPublicHealthData <-read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data-NY/WHO_NREVSS_Public_Health_Labs.csv',skip=1)
-ny_graph_public_health <-influenza_positive_tested(nyPublicHealthData,TRUE)
-ny_graph_public_health
 
 
 
