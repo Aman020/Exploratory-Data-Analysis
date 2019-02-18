@@ -5,6 +5,7 @@ test1
 #barplot(test1, col="blue", type="o", ylim=c(0,90000), xlab="Week", ylab="Number of Positive Specimens")
 par(bg = "white")
 xy <- paste(test1$YEAR, test1$WEEK)
+xy <- sprintf("%d%2d", test1$YEAR, test1$WEEK)
 ab <-
   barplot(test1$TOTAL.A,
           col = "yellow",
@@ -57,58 +58,11 @@ axis(4,
 
 #############################################################
 
-##Bihani
-
-influenza <- read.csv(file.choose(), skip = 1)
-par(bg = "cornsilk")
-complete_week <- paste(influenza$YEAR, influenza$WEEK)
-complete_week <- sprintf("%d%2d", influenza$YEAR, influenza$WEEK)
-total_specimens <- influenza$TOTAL.SPECIMENS
-
-barplot(
-  influenza$TOTAL.A ,
-  xlab = "weeks" ,
-  ylab = "total specimens",
-  names.arg = complete_week ,
-  col = "yellow"
-)
-par(new = T)
-barplot(
-  influenza$TOTAL.B ,
-  xlab = "weeks" ,
-  ylab = "total specimens" ,
-  names.arg = complete_week ,
-  col = "green"
-)
-axis(
-  4,
-  ylim = c(influenza$PERCENT.POSITIVE),
-  col = "black",
-  las = 0
-)
-par(new = T)
-
-plot(
-  influenza$PERCENT.POSITIVE,
-  col = "black",
-  type = "l" ,
-  ylab = "",
-  xlab = "",
-  axes = FALSE
-)
-lines(influenza$PERCENT.A,
-      col = "red",
-      type = "l" ,
-      lty = "dotted")
-lines(influenza$PERCENT.B,
-      col = "blue",
-      type = "l",
-      lty = "dashed")
-
 #############################################################
 test2 <- read.csv(file.choose(), skip = 1)
 par(bg = "white")
 week1 <- paste(test2$YEAR, test2$WEEK)
+week1 <- sprintf("%d%2d", test2$YEAR, test2$WEEK)
 if (identical(week1, character(0))) {
   print("Test")
   week1 <- test2$SEASON_DESCRIPTION
