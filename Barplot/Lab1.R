@@ -57,6 +57,17 @@ axis(4,
      col = "black",
      las = 0)
 
+grid(nx = 2, ny = NULL)
+legend(
+  "topright",
+  inset = c(.2, 0),
+  c("A", "B", "Percent Positive", "% Positive Flu A","% Positive Flu A" ),
+  col = c("yellow", "green", "black", "yellow", "green"),
+  pch = c(15, 15, NA, NA, NA),
+  lty = c(0,0,1,2,2),
+  bty = "n"
+)
+
 #############################################################
 ################## PROBLEM 2 and PROBLEM 4 ##################
 #############################################################
