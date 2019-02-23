@@ -101,3 +101,71 @@ influenza_positive_tested(read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data/WHO_
 
 #--------------------------NY State Influenza Positive Tested----------------------------------------------
 influenza_positive_tested(read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data-NY/WHO_NREVSS_Public_Health_Labs.csv',skip=1),TRUE)
+
+
+
+library(plotly)
+
+part10 <- read.csv(file.choose())
+#part10$Week <- sprintf("%02d",part10$Week)
+x_axis <- paste(part10$SEASON,part10$WEEK)
+
+y1 <- c(part10$PERCENT.P.I)
+y2 <- c(part10$BASELINE)
+y3 <- c(part10$THRESHOLD)
+
+
+data <- data.frame(x_axis, y1, y2, y3)
+data
+#The default order will be alphabetized unless specified as below:
+#data$month <- factor(data$month, levels = data[["month"]])
+
+p <- plot_ly(data, x = ~x_axis, y = ~y1, name = 'Percent Death due to Pneumonia and Influenza', type = 'scatter', mode = 'lines',
+             line = list(color = 'rgb(205, 12, 24)')) %>%
+  add_trace(y = ~y2, name = 'Expected', line = list(color = 'rgb(22, 96, 167)', width = 4)) %>%
+  add_trace(y = ~y3, name = 'Threshold', line = list(color = 'rgb(205, 12, 24)', width = 4, dash = 'dash')) %>%
+  layout(title = "Pneumonia Influenza Mortality",
+         xaxis = list(title = "MMR Week"),
+         yaxis = list (title = "% of All Deaths due to P & I"))
+p
+
+# --------------Pediatric Deaths--------------
+
+pdeath <- read.csv(file.choose())
+
+weekWithZero<- sprintf("%02d",pdeath$WEEK)
+weekWithZero
+weekWithSeason <- paste(pdeath$SEASON, weekWithZero)
+weekWithSeason
+week<- gsub(" ", "", weekWithSeason, fixed = TRUE)
+week
+noOfInfluenzaDeath = pdeath$NUM.INFLUENZA.DEATHS
+totalDeaths = pdeath$TOTAL.DEATHS
+deathdata<- data.frame(week,noOfInfluenzaDeath,totalDeaths)
+pediatricDeath <- plot_ly(data)%>%
+  add_trace(y=~noOfInfluenzaDeath, x=~week, type="bar", color = I("green"))%>%
+layout(title = "Pneumonia Influenza Mortality",
+       xaxis = list(title = "MMR Week"),
+       yaxis = list (title = "% of All Deaths due to P & I"))
+pediatricDeath
+
+first10<- read.csv(file.choose(), nrows = 18)
+first10
+second<-read.csv(file.choose(),nrows = 51,skip = 19)
+second
+
+
+
+
+"Pediatric Deaths"
+part_ped =  read.csv(file.choose())
+
+week <- part_ped$WEEK.NUMBER
+y1 <- part_ped$PREVIOUS.WEEKS.DEATHS
+y2 <- part_ped$CURRENT.WEEK.DEATHS
+data_ped <- data.frame(week, y1,y2)
+
+p <- plot_ly(data_ped) %>%
+  add_trace(x=~week, y= ~y1, type = 'bar', name = 'Total B', color = I("darkgreen")) %>%
+  add_trace(x=~week, y= ~y2, type = 'bar', name = 'Total B', color = I("lightblue")) %>%
+  layout(title = 'Number of Influenza Associated Pediatric Deaths',xaxis=list(title="Week"),yaxis = list(title = 'Number of Deaths'),barmode = 'stack')
