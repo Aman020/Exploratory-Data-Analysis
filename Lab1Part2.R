@@ -114,15 +114,41 @@ f <- list( font = 4)
 dfMortality <- data.frame(displayWeek,week, percentPI, threshold,baseline)
 
 p <- plot_ly(dfMortality, x = ~week, y = ~percentPI, name = 'Percent Death due to Pneumonia and Influenza', type = 'scatter', mode = 'lines',
-             line = list(color = 'rgb(205, 12, 24)')) %>%
-  add_trace(y = ~baseline, name = 'Seasonal Baseline', line = list(color = 'rgb(22, 96, 167)')) %>%
-  add_trace(y = ~threshold, name = 'Epidemic Threshold', line = list(color = 'rgb(205, 12, 24)', dash = 'dash')) %>%
+             line = list(color = 'red')) %>%
+  add_trace(y = ~baseline, name = 'Seasonal Baseline', line = list(color = 'black')) %>%
+  add_trace(y = ~threshold, name = 'Epidemic Threshold', line = list(color = 'black')) %>%
   layout(title = "Pneumonia and Influenza Mortality",
-         xaxis = list(title = "MMWR Week",categoryorder = "array",categoryarray = week),  #https://stackoverflow.com/questions/40701491/plot-ly-in-r-unwanted-alphabetical-sorting-of-x-axis   - TO avoid unwanted sorting of a column using plotly 
-         yaxis = list (title = "% of All Deaths due to P & I") ,font = f)
-
-
+         xaxis = list(title = "MMWR Week",categoryorder = "array",categoryarray = week ), # https://stackoverflow.com/questions/40701491/plot-ly-in-r-unwanted-alphabetical-sorting-of-x-axis   - TO avoid unwanted sorting of a column using plotly 
+         yaxis = list (title = "% of All Deaths due to P & I") ,font = f
+         )
 p
+
+
+
+#-4) Pediatric Death 
+
+library(plotly)
+pdeath <- read.csv(file.choose(), skip =1)
+week<- pdeath$WEEK.NUMBER
+noOfDeath <- pdeath$NO..OF.DEATHS
+previousDeath <- pdeath$PREVIOUS.WEEK.DEATHS
+currentDeath<- pdeath$CURRENT.WEEK.DEATHS
+
+data <- data.frame(week, noOfDeath, previousDeath, currentDeath)
+
+p1<- plot_ly(data, x= ~week , y = ~previousDeath,name ='Previous Deaths', type = 'bar',color = I('dark green') )%>%
+    add_trace( y =~currentDeath, color = I( 'pink') , name ="Current Deaths")%>%
+  layout(title = "Number of Influenza-Associated Pediatric Deaths",
+         xaxis = list(title = "Week" ), 
+         yaxis = list (title = "Number of deaths"))
+p1
+
+
+
+
+
+
+
 
 
 
