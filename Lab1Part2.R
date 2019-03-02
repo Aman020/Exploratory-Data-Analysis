@@ -1,5 +1,7 @@
 
 
+#---------------------------------------------------TASK 4------------------------------------------------------
+
 influenza_national_summary <- function( filedata) {
   library(plotly)
   national_summary <- filedata
@@ -26,7 +28,7 @@ influenza_national_summary <- function( filedata) {
   
   p <- plot_ly(data) %>%
     add_trace(x=~week, y = ~totalA, type="bar", name = "Total A", color = I("yellow")) %>%
-    add_trace(x=~week, y=~totalB, type = 'bar', name = 'Total B', color = I("green")) %>%
+    add_trace(x=~week, y=~totalB, type = 'bar', name = 'Total B', color = I("dark green")) %>%
     add_trace(x=~week,y = ~percentA, type="scatter", mode="lines", name="Percentage A", color = I("orange"), yaxis='y2',line=list(dash="dash")) %>%
     add_trace(x=~week,y = ~percentB, type="scatter", mode="lines",name="Percentage B", color = I("green"), yaxis='y2', line=list(dash="dash")) %>%
     add_trace(x=~week,y = ~percentPositive, type="scatter", mode="lines", name="Total Percentage", color = I("black"), yaxis='y2') %>%
@@ -90,82 +92,59 @@ influenza_positive_tested <-function(publicHealthfiledata, isNY = FALSE){
   }
 }
 
-#----------------------------National Summary----------------------------------------------------------
-influenza_national_summary(read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data/WHO_NREVSS_Clinical_Labs.csv'))
-
-#----------------------------NY State Summary-------------------------------------------------------------
-influenza_national_summary(read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data-NY/WHO_NREVSS_Clinical_Labs.csv',skip=1))
-
-#--------------------------- Influenza Positive Tested-----------------------------------------------------
-influenza_positive_tested(read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data/WHO_NREVSS_Public_Health_Labs.csv'))
-
-#--------------------------NY State Influenza Positive Tested----------------------------------------------
-influenza_positive_tested(read.csv('/Users/aman/R/Lab1EDA/FluViewPhase2Data-NY/WHO_NREVSS_Public_Health_Labs.csv',skip=1),TRUE)
+#-1) Influenza national summary (green and yellow chart)
+influenza_national_summary(read.csv(file.choose(),skip =1))
 
 
+#-2) Positive tested
+influenza_positive_tested(read.csv(file.choose(),skip =1))
 
+#-3) Mortality
 library(plotly)
+mortality_csv <- read.csv(file.choose())
+percentPI <-  mortality_csv$PERCENT.P.I 
+threshold <- mortality_csv$THRESHOLD
+baseline <- mortality_csv$BASELINE
+week <- sprintf("%02d",mortality_csv$WEEK)
+displayWeek <- week
+displayWeek
+week <- paste(mortality_csv$SEASON, week)
+f <- list( font = 4)
 
-part10 <- read.csv(file.choose())
-#part10$Week <- sprintf("%02d",part10$Week)
-x_axis <- paste(part10$SEASON,part10$WEEK)
+dfMortality <- data.frame(displayWeek,week, percentPI, threshold,baseline)
 
-y1 <- c(part10$PERCENT.P.I)
-y2 <- c(part10$BASELINE)
-y3 <- c(part10$THRESHOLD)
-
-
-data <- data.frame(x_axis, y1, y2, y3)
-data
-#The default order will be alphabetized unless specified as below:
-#data$month <- factor(data$month, levels = data[["month"]])
-
-p <- plot_ly(data, x = ~x_axis, y = ~y1, name = 'Percent Death due to Pneumonia and Influenza', type = 'scatter', mode = 'lines',
+p <- plot_ly(dfMortality, x = ~week, y = ~percentPI, name = 'Percent Death due to Pneumonia and Influenza', type = 'scatter', mode = 'lines',
              line = list(color = 'rgb(205, 12, 24)')) %>%
-  add_trace(y = ~y2, name = 'Expected', line = list(color = 'rgb(22, 96, 167)', width = 4)) %>%
-  add_trace(y = ~y3, name = 'Threshold', line = list(color = 'rgb(205, 12, 24)', width = 4, dash = 'dash')) %>%
-  layout(title = "Pneumonia Influenza Mortality",
-         xaxis = list(title = "MMR Week"),
-         yaxis = list (title = "% of All Deaths due to P & I"))
+  add_trace(y = ~baseline, name = 'Seasonal Baseline', line = list(color = 'rgb(22, 96, 167)')) %>%
+  add_trace(y = ~threshold, name = 'Epidemic Threshold', line = list(color = 'rgb(205, 12, 24)', dash = 'dash')) %>%
+  layout(title = "Pneumonia and Influenza Mortality",
+         xaxis = list(title = "MMWR Week",categoryorder = "array",categoryarray = week),  #https://stackoverflow.com/questions/40701491/plot-ly-in-r-unwanted-alphabetical-sorting-of-x-axis   - TO avoid unwanted sorting of a column using plotly 
+         yaxis = list (title = "% of All Deaths due to P & I") ,font = f)
+
+
 p
 
-# --------------Pediatric Deaths--------------
-
-pdeath <- read.csv(file.choose())
-
-weekWithZero<- sprintf("%02d",pdeath$WEEK)
-weekWithZero
-weekWithSeason <- paste(pdeath$SEASON, weekWithZero)
-weekWithSeason
-week<- gsub(" ", "", weekWithSeason, fixed = TRUE)
-week
-noOfInfluenzaDeath = pdeath$NUM.INFLUENZA.DEATHS
-totalDeaths = pdeath$TOTAL.DEATHS
-deathdata<- data.frame(week,noOfInfluenzaDeath,totalDeaths)
-pediatricDeath <- plot_ly(data)%>%
-  add_trace(y=~noOfInfluenzaDeath, x=~week, type="bar", color = I("green"))%>%
-layout(title = "Pneumonia Influenza Mortality",
-       xaxis = list(title = "MMR Week"),
-       yaxis = list (title = "% of All Deaths due to P & I"))
-pediatricDeath
-
-first10<- read.csv(file.choose(), nrows = 18)
-first10
-second<-read.csv(file.choose(),nrows = 51,skip = 19)
-second
 
 
 
 
-"Pediatric Deaths"
-part_ped =  read.csv(file.choose())
 
-week <- part_ped$WEEK.NUMBER
-y1 <- part_ped$PREVIOUS.WEEKS.DEATHS
-y2 <- part_ped$CURRENT.WEEK.DEATHS
-data_ped <- data.frame(week, y1,y2)
+#-------------------------------------------------TASK 5--------------------------------------------------------
 
-p <- plot_ly(data_ped) %>%
-  add_trace(x=~week, y= ~y1, type = 'bar', name = 'Total B', color = I("darkgreen")) %>%
-  add_trace(x=~week, y= ~y2, type = 'bar', name = 'Total B', color = I("lightblue")) %>%
-  layout(title = 'Number of Influenza Associated Pediatric Deaths',xaxis=list(title="Week"),yaxis = list(title = 'Number of Deaths'),barmode = 'stack')
+#-1) Influenza national summary (green and yellow chart)
+influenza_national_summary(read.csv(file.choose(),skip =1))
+
+
+#-2) Positive tested
+influenza_positive_tested(read.csv(file.choose(),skip =1))
+
+
+
+#-------------------------------------------------TASK 6--------------------------------------------------------
+
+#-NY State Influenza Positive Tested
+influenza_positive_tested(read.csv(file.choose(),skip=1),TRUE)
+
+
+#-NY State Summary
+influenza_national_summary(read.csv(file.choose(),skip=1))
