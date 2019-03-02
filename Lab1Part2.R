@@ -182,9 +182,7 @@ percentVisit18 <- season2018$X..WEIGHTED.ILI
 week<- season2018$WEEK
 week
 data <- data.frame(week,percentVisit09,percentVisit11,percentVisit14,percentVisit15,percentVisit16,percentVisit17,percentVisit18)
-
 data
-
 p<- plot_ly(data, x=~week, y =~percentVisit09, type = 'scatter',name = "2009-2010 Season", mode = 'lines')%>%
   add_trace(y=~percentVisit11 ,name = "2011-2012 Season" , color = I('pink') )%>%
   add_trace(y=~percentVisit14 ,name = "2014-2015 Season" , color = I('orange') )%>%
@@ -196,6 +194,35 @@ p<- plot_ly(data, x=~week, y =~percentVisit09, type = 'scatter',name = "2009-201
 p
 
 
+#-6)Heat Map
+
+
+# Reference -https://stackoverflow.com/questions/29614972/ggplot-us-state-map-colors-are-fine-polygons-jagged-r
+
+library(ggplot2)
+library(maptools)
+heatMap_csv <- read.csv(file.choose())
+region <- tolower(heatMap_csv$STATENAME)
+library(RColorBrewer)
+
+
+us <- map_data("state")
+map <- ggplot()
+map <- map + geom_map(data=us, map=us,aes(x = long, y = lat, map_id=region),
+                    fill="#ffffff", color="#ffffff", size=0.8)
+map
+map <- map + geom_map(data=heatMap_csv, map=us,
+                    aes(fill= as.numeric( substr( heatMap_csv$ACTIVITY.LEVEL, 6, 8 ) ), map_id=region),
+                    color="black", size=0.15)
+map
+map <- map + theme(panel.border = element_blank(), panel.background = element_blank(), axis.ticks = element_blank(),
+                 axis.text = element_blank(), legend.key.size =  unit(0.5, "in"))
+map
+map <- map + labs(x="", y="", fill ="ILI Activity Level", title = "2018-19 Influenza Season Week 8 ending Feb 23, 2019")
+map <- map + theme(plot.title = element_text(size = 15, face = "bold") , legend.title=element_text(size=20),
+                 legend.text=element_text(size=10))
+map <- map + scale_fill_gradientn(colours = rev(brewer.pal(11, name="RdYlGn")))
+map
 
 
 #-------------------------------------------------TASK 5--------------------------------------------------------
