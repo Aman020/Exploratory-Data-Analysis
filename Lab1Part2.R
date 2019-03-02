@@ -146,13 +146,54 @@ p1
 
 
 
+#-5) Influenza Like Ilness
+library(plotly)
+ili <- read.csv(file.choose(), skip =1)
+week <- sprintf("%02d", ili$WEEK)
+week<- paste( ili$YEAR, week)
+#season2009 <-ili[ili$YEAR == '2009',]
 
 
 
 
+week <- sprintf("%04d%02d",ili$YEAR,ili$WEEK)
+
+ili <- read.csv(file.choose())
+
+# Reference -http://www.cookbook-r.com/Basics/Getting_a_subset_of_a_data_structure/
+
+season2009 <- subset(ili, (YEAR == 2009 & WEEK >=40) | (YEAR == 2010 & WEEK < 40))
+season2011 <- subset(ili, (YEAR==2011 & WEEK>=40) | (YEAR == 2012 & WEEK < 40))
+season2014 <- subset(ili, (YEAR==2014 & WEEK>=40 & WEEK <= 52) | (YEAR == 2015 & WEEK < 40 ))
+season2015 <- subset(ili, (YEAR==2015 & WEEK>=40) | (YEAR == 2016 & WEEK < 40))
+season2016 <- subset(ili, (YEAR==2016 & WEEK>=40) | (YEAR == 2017 & WEEK <40))
+season2017 <- subset(ili, (YEAR==2017 & WEEK>=40) | (YEAR == 2018 & WEEK<40))
+season2018 <- subset(ili, (YEAR==2018 & WEEK>=40) | (YEAR == 2018 & WEEK<40))
 
 
+percentVisit09 <- season2009$X..WEIGHTED.ILI
+percentVisit11 <- season2011$X..WEIGHTED.ILI
+percentVisit14 <- season2014$X..WEIGHTED.ILI
+percentVisit15 <- season2015$X..WEIGHTED.ILI
+percentVisit16 <- season2016$X..WEIGHTED.ILI
+percentVisit17 <- season2017$X..WEIGHTED.ILI
+percentVisit18 <- season2018$X..WEIGHTED.ILI
 
+week<- season2018$WEEK
+week
+data <- data.frame(week,percentVisit09,percentVisit11,percentVisit14,percentVisit15,percentVisit16,percentVisit17,percentVisit18)
+
+data
+
+p<- plot_ly(data, x=~week, y =~percentVisit09, type = 'scatter',name = "2009-2010 Season", mode = 'lines')%>%
+    add_trace(y=~percentVisit11 ,name = "2011-2012 Season" , color = I('pink') )%>%
+    add_trace(y=~percentVisit14 ,name = "2014-2015 Season" , color = I('orange') )%>%
+    add_trace(y=~percentVisit15 ,name = "2015-2016 Season" , color = I('blue') )%>%
+    add_trace(y=~percentVisit16 ,name = "2016-2017 Season" , color = I('cyan') )%>%
+    add_trace(y=~percentVisit17 ,name = "2017-2018 Season" , color = I('black') )%>%
+    add_trace(y=~percentVisit18 ,name = "2018-2019 Season" , color = I('red') )%>%
+    layout(xaxis = list(title = "Week", tickmode = 'linear'), yaxis = list(title = "% of Visist for ILI"), font = list(f=4))
+p
 
 
 #-------------------------------------------------TASK 5--------------------------------------------------------
