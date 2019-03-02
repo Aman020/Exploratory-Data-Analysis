@@ -186,14 +186,16 @@ data <- data.frame(week,percentVisit09,percentVisit11,percentVisit14,percentVisi
 data
 
 p<- plot_ly(data, x=~week, y =~percentVisit09, type = 'scatter',name = "2009-2010 Season", mode = 'lines')%>%
-    add_trace(y=~percentVisit11 ,name = "2011-2012 Season" , color = I('pink') )%>%
-    add_trace(y=~percentVisit14 ,name = "2014-2015 Season" , color = I('orange') )%>%
-    add_trace(y=~percentVisit15 ,name = "2015-2016 Season" , color = I('blue') )%>%
-    add_trace(y=~percentVisit16 ,name = "2016-2017 Season" , color = I('cyan') )%>%
-    add_trace(y=~percentVisit17 ,name = "2017-2018 Season" , color = I('black') )%>%
-    add_trace(y=~percentVisit18 ,name = "2018-2019 Season" , color = I('red') )%>%
-    layout(xaxis = list(title = "Week", tickmode = 'linear'), yaxis = list(title = "% of Visist for ILI"), font = list(f=4))
+  add_trace(y=~percentVisit11 ,name = "2011-2012 Season" , color = I('pink') )%>%
+  add_trace(y=~percentVisit14 ,name = "2014-2015 Season" , color = I('orange') )%>%
+  add_trace(y=~percentVisit15 ,name = "2015-2016 Season" , color = I('blue') )%>%
+  add_trace(y=~percentVisit16 ,name = "2016-2017 Season" , color = I('cyan') )%>%
+  add_trace(y=~percentVisit17 ,name = "2017-2018 Season" , color = I('black') )%>%
+  add_trace(y=~percentVisit18 ,name = "2018-2019 Season" , color = I('red') )%>%
+  layout(xaxis = list(title = "Week", tickmode = 'linear'), yaxis = list(title = "% of Visist for ILI"), font = list(f=4))
 p
+
+
 
 
 #-------------------------------------------------TASK 5--------------------------------------------------------
