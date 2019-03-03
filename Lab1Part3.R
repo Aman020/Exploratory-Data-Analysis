@@ -2,6 +2,7 @@ install.packages("twitteR")
 install.packages("rtweet")
 install.packages("ggmap")
 library(rtweet)
+library(ggmap)
 library(twitteR)
 library(maps)
 library(sp)    
@@ -18,6 +19,7 @@ register_google(key = 'AIzaSyBChIhz8FzwkvhgiJEC4fFqgMuXpMEofAM')
 twitter_token <- create_token(app = "Flu-Analysis-EDA",
                               consumer_key = "XcHOAVRMJa0PnGMhBKsbZOF3W",
                               consumer_secret = "06gmf6S12GbulHThDQA3AlWB5el2e8HbVrYdlqIHKp6vTf2ucf")
+
 #Reference- https://stackoverflow.com/questions/8751497/latitude-longitude-coordinates-to-state-code-in-r
 latlong2state <- function(pointsDF) {
   
@@ -33,54 +35,57 @@ latlong2state <- function(pointsDF) {
   stateNames[indices]
 }
 
-
 #-----------------Extracing Tweets with search string as flu-------------------------------------------
+getAndSaveTweets<- function(searchQuery,tweetsCount, oauthToken, outputFileName)
+{
+  tweets_flu <- search_tweets(q = searchQuery, n = tweetsCount, token = oauthToken, geocode = lookup_coords("usa"))
+  tweets_flu <- subset(tweets_flu, tweets_flu$is_retweet == FALSE)
+  save_as_csv(tweets_flu,outputFileName)
+  return(tweets_flu)
+}
+cleanAndSaveGeocodedTweets<- function (rawTweets, outputFileName )
+{
+  
+  
+  df_raw_tweet_flu_csv <- data.frame((rawTweets))
+  geocode <- geocode(as.character(df_raw_tweet_flu_csv$location),output="more", override_limit=FALSE, source = c("google","dsk"))
+  df_geocode = data.frame(geocode)
+  df_clean_tweet_flu <-subset(df_geocode, (lon != "NA"))
+  df_clean_tweet_flu<-subset(df_geocode, (lat != "NA"))
+  df_clean_tweet_flu<-subset(df_geocode, (address != "NA"))
+  write.csv(df_clean_tweet_flu, file = outputFileName)
+  return(df_clean_tweet_flu)
+
+  }
+mergeGeocode<-function(...){
+  argsList <- list(...)
+  geocode <-data.frame()
+  for(geocodeData in argsList)
+  {
+    geocode <- rbind(geocode,geocodeData)
+  }
+   return( geocode)
+}
+
+tweetsFlu <- getAndSaveTweets("flu",15000,twitter_token,"Twitter_data/raw_15k_flu_2mar.csv" )
+tweetsHashFlu <- getAndSaveTweets("#flu",15000,twitter_token,"Twitter_data/raw_15k_HashFlu_2mar.csv" )
+tweetsInfluenza <- getAndSaveTweets("influenza",15000,twitter_token,"Twitter_data/raw_15k_influenza_2mar.csv" )
+
+#------------------ Cleaning the data and getting the geocodes. Saving it in a file------------------
+cleanTweetsFlu <- cleanAndSaveGeocodedTweets(tweetsFlu,"Twitter_data/clean_15k_flu_2mar.csv")
+cleanTweetsHashFlu <- cleanAndSaveGeocodedTweets(tweetsHashFlu,"Twitter_data/clean_15k_hash_flu_2mar.csv")
+cleanTweetsInfluenza <- cleanAndSaveGeocodedTweets(tweetsInfluenza,"Twitter_data/clean_15k_influenza_2mar.csv")
 
 
-
-tweets_flu <- search_tweets(q = "flu", n = 15000, token = twitter_token, geocode = lookup_coords("usa"))
-save_as_csv(tweets_flu,"Twitter_data/raw_rtweet_10k_flu.csv")
-df_raw_tweet_flu_csv <- data.frame((tweets_flu))
-geocode_ <- geocode(as.character(df_raw_tweet_flu_csv$location),output="more", override_limit=FALSE, source = c("google","dsk"))
-df_geocode = data.frame(geocode_)
-write.csv(df_geocode, file = "Twitter_data/cleandf_tweet_flu.csv")
-df_geocode <-read.csv(file.choose())
-df_clean_tweet_flu <-subset(df_geocode, (lon != "NA"))
-df_clean_tweet_flu<-subset(df_geocode, (lat != "NA"))
-df_clean_tweet_flu<-subset(df_geocode, (address != "NA"))
-write.csv(df_clean_tweet_flu, file = "/Users/aman/R/Lab1EDA/Twitter_Data/cleandf_tweet_flu.csv")
-df_clean_tweet_flu <- read.csv("/Users/aman/R/Lab1EDA/Twitter_Data/cleandf_tweet_flu.csv")
-
-
-
-#-----------------Extracing Tweets with search string as #flu-------------------------------------------
-
-
-df_raw_tweet_hashtag_flu_csv <- data.frame((tweets_hashtag_flu))
-geocode_hashtag_flu <- geocode(as.character(df_raw_tweet_hashtag_flu_csv$location),output="more", override_limit=FALSE, source = c("google","dsk"))
-
-df_clean_hashtag_tweet <-subset(geocode_hashtag_flu, (lon != "NA"))
-df_clean_hashtag_tweet<-subset(geocode_hashtag_flu, (lat != "NA"))
-df_clean_hashtag_tweet<-subset(geocode_hashtag_flu, (address != "NA"))
-write.csv(df_clean_hashtag_tweet, file = "/Users/aman/R/Lab1EDA/Twitter_data/clean_df_rtweet_10k_hashtag_flu.csv")
-df_clean_tweet_hashtagflu <- read.csv("/Users/aman/R/Lab1EDA/Twitter_data/clean_df_rtweet_10k_hashtag_flu.csv")
-
-#------------- Merging all the longitude and latitude of all the tweets collected through various search strings-------
-
-geodata_flue <- data.frame( df_clean_tweet_flu$lon, df_clean_tweet_flu$lat)
-geodata_hashtagflu<- data.frame( df_clean_tweet_hashtagflu$lon, df_clean_tweet_hashtagflu$lat)
-head(geodata_flue)
-head(geodata_hashtagflu)
-names(geodata_flue)<-names(geodata_hashtagflu)
-geodata <-rbind (geodata_flue,geodata_hashtagflu )
-
-
-
-usStatelocation <- latlong2state(geodata)
+geodata <- mergeGeocode(cleanTweetsFlu,cleanTweetsInfluenza,cleanTweetsHashFlu)
+dfGeodata<-data.frame( geodata$lon, geodata$lat)
+write.csv(dfGeodata, file = "/Users/aman/R/Lab1EDA/Twitter_data/Geocodes.csv",row.names=FALSE, na="")
+head(geodata)
+usStatelocation <- latlong2state(dfGeodata)
 US_stateFreq <- table(usStatelocation)
 df_US_state_frequency <- data.frame(US_stateFreq)
 df_US_state_frequency
-write.csv(df_US_state_frequency, file = "/Users/aman/R/Lab1EDA/Twitter_data/US_State_Frequency.csv",row.names=FALSE, na="")
+write.csv(df_US_state_frequency, file = "/Users/aman/R/Lab1EDA/Twitter_data/US_State_Frequency_2mar.csv",row.names=FALSE, na="")
 us <- map_data("state")
 
 # Reference -https://stackoverflow.com/questions/29614972/ggplot-us-state-map-colors-are-fine-polygons-jagged-r
@@ -93,12 +98,9 @@ gg <- gg + geom_map(data=df_US_state_frequency, map=us,
                     color="#fddfff", size=0.15)
 gg <- gg + labs(x="", y="", fill ="Frequency", title = "2019 Infulenza and Flu Tweets Frequency")
 #gg <- gg + coord_map("albers", lat0 = 39, lat1 = 45) 
-gg<-gg + scale_fill_gradient(name="Flu",low='white', high='red') +
+gg<-gg + scale_fill_gradient(name="Flu",low='white', high='red',limits=c(0,700)) +
   theme(plot.title = element_text(hjust = 0.5)) +
   theme(legend.position=c("0.9", "0.2"))
 gg <- gg + coord_map("albers", lat0 = 39, lat1 = 45) 
 gg <- gg + theme(axis.ticks = element_blank())
 gg
-
-
-

@@ -196,30 +196,27 @@ p
 
 #-6)Heat Map
 
-
 # Reference -https://stackoverflow.com/questions/29614972/ggplot-us-state-map-colors-are-fine-polygons-jagged-r
 
 library(ggplot2)
 library(maptools)
+library(RColorBrewer)
 heatMap_csv <- read.csv(file.choose())
 region <- tolower(heatMap_csv$STATENAME)
-library(RColorBrewer)
-
-
 us <- map_data("state")
 map <- ggplot()
 map <- map + geom_map(data=us, map=us,aes(x = long, y = lat, map_id=region),
-                    fill="#ffffff", color="#ffffff", size=0.8)
+                    fill="grey", color="grey", size=0.7)
 map
 map <- map + geom_map(data=heatMap_csv, map=us,
                     aes(fill= as.numeric( substr( heatMap_csv$ACTIVITY.LEVEL, 6, 8 ) ), map_id=region),
-                    color="black", size=0.15)
+                    color="black")
 map
 map <- map + theme(panel.border = element_blank(), panel.background = element_blank(), axis.ticks = element_blank(),
                  axis.text = element_blank(), legend.key.size =  unit(0.5, "in"))
 map
 map <- map + labs(x="", y="", fill ="ILI Activity Level", title = "2018-19 Influenza Season Week 8 ending Feb 23, 2019")
-map <- map + theme(plot.title = element_text(size = 15, face = "bold") , legend.title=element_text(size=20),
+map <- map + theme(plot.title = element_text(size = 14, face = "bold") , legend.title=element_text(size=14),
                  legend.text=element_text(size=10))
 map <- map + scale_fill_gradientn(colours = rev(brewer.pal(11, name="RdYlGn")))
 map
