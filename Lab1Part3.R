@@ -34,17 +34,13 @@ latlong2state <- function(pointsDF) {
   stateNames <- sapply(states_sp@polygons, function(x) x@ID)
   stateNames[indices]
 }
-
-#-----------------Extracing Tweets with search string as flu-------------------------------------------
-getAndSaveTweets<- function(searchQuery,tweetsCount, oauthToken, outputFileName)
-{
+getAndSaveTweets<- function(searchQuery,tweetsCount, oauthToken, outputFileName){
   tweets_flu <- search_tweets(q = searchQuery, n = tweetsCount, token = oauthToken, geocode = lookup_coords("usa"))
   tweets_flu <- subset(tweets_flu, tweets_flu$is_retweet == FALSE)
   save_as_csv(tweets_flu,outputFileName)
   return(tweets_flu)
 }
-cleanAndSaveGeocodedTweets<- function (rawTweets, outputFileName )
-{
+cleanAndSaveGeocodedTweets<- function (rawTweets, outputFileName ){
   
   
   df_raw_tweet_flu_csv <- data.frame((rawTweets))
@@ -66,9 +62,7 @@ mergeGeocode<-function(...){
   }
    return( geocode)
 }
-
-plotHeatMap <- function(data,location, frequency)
-{
+plotHeatMap <- function(data,location, frequency){
   # Reference -https://stackoverflow.com/questions/29614972/ggplot-us-state-map-colors-are-fine-polygons-jagged-r
   
   library(ggmap)
@@ -96,8 +90,7 @@ plotHeatMap <- function(data,location, frequency)
   gg <- gg + theme(axis.ticks = element_blank())
   gg
 }
-getStateFrequency<-function(geocodes)
-{
+getStateFrequency<-function(geocodes){
   dfGeodata<-data.frame( geocodes$lon, geocodes$lat)
 
   usStatelocation <- latlong2state(dfGeodata)
