@@ -93,7 +93,7 @@ influenza_positive_tested <-function(publicHealthfiledata, isNY = FALSE){
 }
 
 #-1) Influenza national summary (green and yellow chart)
-influenza_national_summary(read.csv(file.choose(),skip =1))
+influenza_national_summary(read.csv(file.choose(),skip = 1))
 
 
 #-2) Positive tested
@@ -149,18 +149,13 @@ p1
 #-5) Influenza Like Ilness
 library(plotly)
 ili <- read.csv(file.choose(), skip =1)
-week <- sprintf("%02d", ili$WEEK)
-week<- paste( ili$YEAR, week)
+#week <- sprintf("%02d", ili$WEEK)
+#week<- paste( ili$YEAR, week)
 #season2009 <-ili[ili$YEAR == '2009',]
-
-
-
-
 week <- sprintf("%04d%02d",ili$YEAR,ili$WEEK)
 
-ili <- read.csv(file.choose())
-
 # Reference -http://www.cookbook-r.com/Basics/Getting_a_subset_of_a_data_structure/
+
 
 season2009 <- subset(ili, (YEAR == 2009 & WEEK >=40) | (YEAR == 2010 & WEEK < 40))
 season2011 <- subset(ili, (YEAR==2011 & WEEK>=40) | (YEAR == 2012 & WEEK < 40))
@@ -201,35 +196,32 @@ p
 library(ggplot2)
 library(maptools)
 library(RColorBrewer)
+library(usmap)
+
 heatMap_csv <- read.csv(file.choose())
 region <- tolower(heatMap_csv$STATENAME)
-us <- map_data("state")
-map <- ggplot()
-map <- map + geom_map(data=us, map=us,aes(x = long, y = lat, map_id=region),
-                    fill="grey", color="grey", size=0.7)
-map
-map <- map + geom_map(data=heatMap_csv, map=us,
-                    aes(fill= as.numeric( substr( heatMap_csv$ACTIVITY.LEVEL, 6, 8 ) ), map_id=region),
-                    color="black")
-map
-map <- map + theme(panel.border = element_blank(), panel.background = element_blank(), axis.ticks = element_blank(),
-                 axis.text = element_blank(), legend.key.size =  unit(0.5, "in"))
-map
-map <- map + labs(x="", y="", fill ="ILI Activity Level", title = "2018-19 Influenza Season Week 8 ending Feb 23, 2019")
-map <- map + theme(plot.title = element_text(size = 14, face = "bold") , legend.title=element_text(size=14),
-                 legend.text=element_text(size=10))
-map <- map + scale_fill_gradientn(colours = rev(brewer.pal(11, name="RdYlGn")))
-map
 
+head(region)
+as.numeric( substr( heatMap_csv$ACTIVITY.LEVEL, 6, 8 ))
+total <- data.frame(region,as.numeric( substr( heatMap_csv$ACTIVITY.LEVEL, 6, 8 )))
+names(total ) <-c("state","activity")
+head(total)
+plot_usmap(data = total, values = "activity", lines = "black", regions = "states", labels = TRUE) +
+  scale_fill_continuous(
+    low = "white", high = "red", name = "ILI Activity Level", label = scales::comma
+  ) + theme(legend.position = "right") + labs(title = "2018-19 Influenza Season Week 8 ending Feb 23, 2019")
+#+scale_fill_gradientn(colours = rev(brewer.pal(11, name="RdYlGn")))
+
+  
 
 #-------------------------------------------------TASK 5--------------------------------------------------------
 
 #-1) Influenza national summary (green and yellow chart)
-influenza_national_summary(read.csv(file.choose(),skip =1))
+influenza_national_summary(read.csv(file.choose(),skip=1))
 
 
 #-2) Positive tested
-influenza_positive_tested(read.csv(file.choose(),skip =1))
+influenza_positive_tested(read.csv(file.choose(),skip=1))
 
 
 

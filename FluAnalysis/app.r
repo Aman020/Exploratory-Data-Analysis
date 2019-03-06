@@ -6,14 +6,47 @@ ui <- pageWithSidebar(
   headerPanel("FLU ANALUSIS"),
 
   # Sidebar panel for inputs ----
-  sidebarPanel(),
+  sidebarPanel(
+    selectInput("keyword","Please choose one of the following keywords", choices = c("flu","#flu","influenza","all"))
+    
+    
+    
+    
+  ),
+  
+  
 
   # Main panel for displaying outputs ----
-  mainPanel()
+  mainPanel(
+    img(src="latest_heatmap.png", align = "right",height=400,width=550),
+   # img(src="latest_tweetHashFlu.png", align = "right",height=400,width=550),
+    #img(src="latest_tweetsFlu.png", align = "right",height=400,width=550),
+    #img(src="latest_tweetInfluenza.png", align = "right",height=400,width=550)
+   uiOutput("img1")
+  )
 )
 
 
 server <- function(input, output) {
+  
+  output$img1 <- renderUI(
+    
+    {
+    if(input$keyword == "flu"){            
+      img(height = 400, width = 550, src = "latest_tweetsFlu.png")
+    }                                        
+    else if(input$keyword == "#flu"){
+      img(height = 400, width = 550, src = "latest_tweetHashFlu.png")
+    }
+    else if(input$keyword == "influenza")
+      {
+      img(height = 400, width = 550, src = "latest_tweetInfluenza.png")
+       }
+    else if(input$keyword == "all")
+      {
+        img(height = 400, width = 550, src = "latest_totalTweets.png")
+      }
+  })
 
 }
 
