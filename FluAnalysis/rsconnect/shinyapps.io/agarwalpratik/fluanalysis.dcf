@@ -5,6 +5,6 @@ account: agarwalpratik
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 774694
-bundleId: 1924148
+bundleId: 1925428
 url: https://agarwalpratik.shinyapps.io/fluanalysis/
-when: 1552014175.19031
+when: 1552058288.88821
