@@ -221,6 +221,71 @@ plot_usmap(data = dfTotal, values = "activity", lines = "black", regions = "stat
   ) + theme(legend.position = "right") + labs(title = "2018-19 Influenza Season Week 8 ending Feb 23, 2019")
 #+scale_fill_gradientn(colours = rev(brewer.pal(11, name="RdYlGn")))
 
+#---------------------------------------------------------------------------------------------------------------
+#Influenza Virus Characterization
+#Partitioning the screen in 5 divisions
+
+par(mar=c(5,4,6,2)+0.1)
+layout(matrix(c(1,2,3,1,4,5), 2, 3, byrow = TRUE))
+
+datap<-read.csv(file.choose(), skip=1)
+datap1<-read.csv(file.choose())
+#Left graph
+slices<-datap[,c("A..2009.H1N1.","A..H3.","A..Subtyping.not.Performed.","B","BVic","BYam","H3N2v")]
+combo<-colSums(slices)
+colr<-c("orange","red","yellow","lightgreen","green","purple","black")
+pie(combo,labels = combo,radius = 1.0, col=colr)
+
+
+legend(
+  "bottom", c("A..2009.H1N1.","A..H3.","A..Subtyping.not.Performed.","B","BVic","BYam","H3N2v" ),
+  #col = c("orange","red","yellow","lightgreen","green","purple","black"),
+  fill = colr
+  #bty = "n"
+)
+#Partioning the area for 2 rows and 2 colums
+#par(mfrow=c(2,2))
+#cl=colors (distinct = TRUE)
+
+
+#Graph 1
+b<-datap1[which(datap1$X.Sub.type=='H3') & (datap1$B.Lineage=='Yamagata') &(datap1$X.Sub.type!='B') & (datap1$X.Sub.type!='H1pdm09'),]
+
+#(datap1$Sequence.Genetic.Group=='3C.2a') && (datap1$Sequence.Genetic.Group=='3C.2a1') && (datap1$Sequence.Genetic.Group=='3C.3a'),]
+displayper2<- b$X..of.Total.Distinct.count.of.Cdc.Id..
+displayrow2<- b$Distinct.count.of.Cdc.Id..
+name1=c("3C2a","3C 2a1", "3C 3a")
+lab1=paste(displayper2,"\n", name1,"\n", displayrow2)
+
+pie(displayrow2, labels=lab1, main = "Influenza H3", col = 4:7)
+
+
+#Graph 2
+c<-datap1[which(datap1$X.Sub.type=='H1pdm09') & (datap1$B.Lineage=='Yamagata') & (datap1$X.Sub.type!='B') & (datap1$X.Sub.type !='H3'), ]
+displayrow3<- c$Distinct.count.of.Cdc.Id..
+displayper3<- c$X..of.Total.Distinct.count.of.Cdc.Id..
+df3<-data.frame(displayper3)
+df3<-as.numeric(df3)
+lab2=paste(displayrow3,"\n", name1,"\n", displayper3)
+pie(df3, labels = lab2, main = "Influenza H1pdm09", col="gold")
+
+#Graph 3
+a<-datap1[which(datap1$X.Sub.type=='B') & (datap1$B.Lineage=='Victoria'), ]
+displayper1<- a$X..of.Total.Distinct.count.of.Cdc.Id..
+displayrow1<- a$Distinct.count.of.Cdc.Id..
+name3<-c("V1A","V1A.1","V1A-3DEL")
+lab3=paste(name3,"\n", displayrow1,"\n", displayper1)
+pie(displayrow1, labels=lab3, main="Influenza B Victoria", col = 4:7)
+
+#Graph 4
+d<-datap1[which(datap1$X.Sub.type=='B') & (datap1$B.Lineage=='Yamagata') & (datap1$X.Sub.type!='H1pdm09') & (datap1$X.Sub.type !='H3'), ]
+displayrow4<- d$Distinct.count.of.Cdc.Id..
+displayper4<- d$X..of.Total.Distinct.count.of.Cdc.Id..
+name4<-c("Y3")
+lab4<-paste(name4,"\n",displayrow4,"\n",displayper4)
+pie(displayrow4, labels=lab4, main="Influenza B Yamagata", col = 4:7)
+
+mtext("Sequence Results, by Genetic HA Clade/Subclade, of Specimens \n Submitted to CDC by U.S. Public Health Laborataries,Cumulative,2018-2019 Season", outer = TRUE , side = 3 , line = 4)
   
 
 #-------------------------------------------------TASK 5--------------------------------------------------------
