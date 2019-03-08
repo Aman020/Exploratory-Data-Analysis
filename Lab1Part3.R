@@ -15,6 +15,8 @@ library(maps)
 library(RColorBrewer)
 library(shiny)
 library(usmap)
+library(r)
+library(stringr)
 
 apiKey<- "XcHOAVRMJa0PnGMhBKsbZOF3W"
 apiSecretKey <- "06gmf6S12GbulHThDQA3AlWB5el2e8HbVrYdlqIHKp6vTf2ucf"
@@ -76,6 +78,32 @@ getStateFrequency<-function(geocodes){
   df_US_state_frequency <- data.frame(US_stateFreq)
   return(df_US_state_frequency)
 }
+
+getStateFrequencyRevGeo<- function(geocode){
+  
+  
+  #Reference-https://stackoverflow.com/questions/37117472/loop-for-reverse-geocoding-in-r 
+  
+  result <- mapply(FUN = function(lon, lat) { 
+    revgeocode(c(lon, lat), output = "address") 
+  }, 
+  cleanTweetsFlu$lon, cleanTweetsFlu$lat)
+  head(res3)
+  dfRes <- data.frame(result)
+  
+  df = str_extract(string = dfRes$res, pattern = "[A-Z][A-Z] [0-9]+")
+  df = str_extract(string = df, pattern = "[A-Z][A-Z]")
+
+  states = data.frame(df)
+  colnames(states)[1] <- "region"
+  states$region <- tolower(states$region)
+  freq_temp = table(states)
+  state_freq = as.data.frame(freq_temp)
+  names(state_freq)[1] = 'region'
+  colnames(state_freq)[colnames(state_freq) == "Freq"] <- "value"
+  return( state_freq)
+  
+}
 plotHeatMap <- function(data,location, frequency){
   # Reference -https://stackoverflow.com/questions/29614972/ggplot-us-state-map-colors-are-fine-polygons-jagged-r
   
@@ -115,6 +143,14 @@ plotHeatMap_USMmap <- function(data, searchString)
  }
 
 
+head(cleanTweetsFlu)
+
+df <- c(cleanTweetsFlu$lon,cleanTweetsFlu$lat)
+latlong<-revgeocode(location = df , output='address')
+
+head(state_freq)
+plotHeatMap_USMmap(data = state_freq, "flu")
+
 tweetsFlu <- getAndSaveTweets("flu",15000,twitter_token,"Twitter_data/raw_15k_flu_2mar.csv" )
 tweetsHashFlu <- getAndSaveTweets("#flu",15000,twitter_token,"Twitter_data/raw_15k_HashFlu_2mar.csv" )
 tweetsInfluenza <- getAndSaveTweets("influenza",15000,twitter_token,"Twitter_data/raw_15k_influenza_2mar.csv" )
@@ -131,25 +167,32 @@ cleanTweetsHashFlu <- read.csv("Twitter_data/clean_15k_hash_flu_2mar.csv")
 cleanTweetsInfluenza <-read.csv("Twitter_data/clean_15k_influenza_2mar.csv")
 
 #---------------------Plotting geocodes of  all the tweets collected using search query as flu----------
-dfGeodataTweetsFluStateFreq<-getStateFrequency(cleanTweetsFlu)
+#dfGeodataTweetsFluStateFreq<-getStateFrequency(cleanTweetsFlu)
+dfGeodataTweetsFluStateFreq<-getStateFrequencyRevGeo(cleanTweetsFlu)
 plotHeatMap_USMmap(dfGeodataTweetsFluStateFreq)
 #plotHeatMap(dfGeodataTweetsFluStateFreq,dfGeodataTweetsFluStateFreq$usStatelocation,dfGeodataTweetsFluStateFreq$Freq)
 
 
 #---------------------Plotting geocodes of  all the tweets collected using search query as #flu----------
 
-dfGeodataTweetsHashFluStateFreq<-getStateFrequency(cleanTweetsHashFlu)
+#dfGeodataTweetsHashFluStateFreq<-getStateFrequency(cleanTweetsHashFlu)
+dfGeodataTweetsHashFluStateFreq<-getStateFrequencyRevGeo(cleanTweetsHashFlu)
+
 plotHeatMap_USMmap(dfGeodataTweetsHashFluStateFreq)
 #plotHeatMap(dfGeodataTweetsHashFluStateFreq,dfGeodataTweetsHashFluStateFreq$usStatelocation,dfGeodataTweetsHashFluStateFreq$Freq)
 
 #---------------------Plotting geocodes of  all the tweets collected using search query as influenza----------
-dfGeodataTweetsInfluenzaStateFreq<-getStateFrequency(cleanTweetsInfluenza)
+#dfGeodataTweetsInfluenzaStateFreq<-getStateFrequency(cleanTweetsInfluenza)
+dfGeodataTweetsInfluenzaStateFreq<-getStateFrequencyRevGeo(cleanTweetsInfluenza)
+
 plotHeatMap_USMmap(dfGeodataTweetsInfluenzaStateFreq)
 #plotHeatMap(dfGeodataTweetsInfluenzaStateFreq,dfGeodataTweetsInfluenzaStateFreq$usStatelocation,dfGeodataTweetsInfluenzaStateFreq$Freq)
 
 #-------------------- Plotting all the geocodes of all the tweets collected-------------------
 allGeodata <- mergeGeocode(cleanTweetsFlu,cleanTweetsInfluenza,cleanTweetsHashFlu)
-allGeodataStateFreq<-getStateFrequency(allGeodata)
+#allGeodataStateFreq<-getStateFrequency(allGeodata)
+allGeodataStateFreq<-getStateFrequencyRevGeo(allGeodata)
+
 write.csv(allGeodataStateFreq, file = "/Users/aman/R/Lab1EDA/Twitter_data/US_State_Frequency_2mar.csv",row.names=FALSE, na="")
 allGeodataStateFreq<-read.csv("/Users/aman/R/Lab1EDA/Twitter_data/US_State_Frequency_2mar.csv")
 plotHeatMap_USMmap(allGeodataStateFreq)

@@ -27,8 +27,8 @@ influenza_national_summary <- function( filedata) {
   data <- data.frame(week,totalA, totalB, percentA,percentB,percentPositive)
   
   p <- plot_ly(data) %>%
-    add_trace(x=~week, y = ~totalA, type="bar", name = "Total A", color = I("yellow")) %>%
-    add_trace(x=~week, y=~totalB, type = 'bar', name = 'Total B', color = I("dark green")) %>%
+    add_trace(x=~week, y = ~totalB, type="bar", name = "Total B", color = I("dark green")) %>%
+    add_trace(x=~week, y=~totalA, type = 'bar', name = 'Total A', color = I("yellow")) %>%
     add_trace(x=~week,y = ~percentA, type="scatter", mode="lines", name="Percentage A", color = I("orange"), yaxis='y2',line=list(dash="dash")) %>%
     add_trace(x=~week,y = ~percentB, type="scatter", mode="lines",name="Percentage B", color = I("green"), yaxis='y2', line=list(dash="dash")) %>%
     add_trace(x=~week,y = ~percentPositive, type="scatter", mode="lines", name="Total Percentage", color = I("black"), yaxis='y2') %>%
@@ -52,13 +52,13 @@ influenza_positive_tested <-function(publicHealthfiledata, isNY = FALSE){
     season <-positive_test$SEASON_DESCRIPTION
     data<- data.frame(aSubtypyingNotPerformed,aH1N1,aH3,h3n2v,b,bvc,byam)
     pNY <- plot_ly(data)%>%
-      add_trace(x =~season, y=~aSubtypyingNotPerformed,type="bar",name="A(subtyping not performed)", color =I("yellow"))%>% 
-      add_trace(x =~season,y=~aH1N1,type="bar",name="A(H1N1)pdm09", color =I("orange"))%>%
-      add_trace(x =~season,y=~aH3,type="bar",name="A(H3N2)", color =I("red"))%>%
-      add_trace(x =~season,y=~h3n2v,type="bar",name="H3N2V", color =I("purple"))%>%
-      add_trace(x =~season,y=~b,type="bar",name="B(lineage not performend)", color =I("blue"))%>%
-      add_trace(x =~season,y=~bvc,type="bar",name="B(Victoria Lineage)", color =I("green"))%>%
-      add_trace(x =~season,y=~byam,type="bar",name="B(Yamagata Lineage)", color =I("dark green"))%>%
+      add_trace(x=~week,y=~b,type="bar",name="B(lineage not performend)", color =I("blue"))%>%
+      add_trace(x=~week,y=~bvc,type="bar",name="B(Victoria Lineage)", color =I("green"))%>%
+      add_trace(x=~week,y=~byam,type="bar",name="B(Yamagata Lineage)", color =I("dark green"))%>%
+      add_trace(x=~week,y=~h3n2v,type="bar",name="H3N2V", color =I("purple"))%>%
+      add_trace(x=~week,y=~aH3,type="bar",name="A(H3N2)", color =I("red"))%>%
+      add_trace(x=~week,y=~aH1N1,type="bar",name="A(H1N1)pdm09", color =I("orange"))%>%
+      add_trace(x=~week,y=~aSubtypyingNotPerformed,type="bar",name="A(subtyping not performed)", color =I("yellow"))%>% 
       layout( title = 'Influenza Positive Tests Reported to CDC by US-Public Health Lab, National Summary 2017-2018-NY',xaxis= list(title = 'Season'),yaxis = list(title = 'Number of Positive Specimens '), barmode = "stack",font=t)
     pNY
   }
@@ -80,13 +80,14 @@ influenza_positive_tested <-function(publicHealthfiledata, isNY = FALSE){
   
   data<- data.frame(aSubtypyingNotPerformed,aH1N1,aH3,h3n2v,b,bvc,byam)
   p2 <- plot_ly(data)%>%
-    add_trace(x=~week,y=~aSubtypyingNotPerformed,type="bar",name="A(subtyping not performed)", color =I("yellow"))%>% 
-    add_trace(x=~week,y=~aH1N1,type="bar",name="A(H1N1)pdm09", color =I("orange"))%>%
-    add_trace(x=~week,y=~aH3,type="bar",name="A(H3N2)", color =I("red"))%>%
-    add_trace(x=~week,y=~h3n2v,type="bar",name="H3N2V", color =I("purple"))%>%
     add_trace(x=~week,y=~b,type="bar",name="B(lineage not performend)", color =I("blue"))%>%
     add_trace(x=~week,y=~bvc,type="bar",name="B(Victoria Lineage)", color =I("green"))%>%
     add_trace(x=~week,y=~byam,type="bar",name="B(Yamagata Lineage)", color =I("dark green"))%>%
+    add_trace(x=~week,y=~h3n2v,type="bar",name="H3N2V", color =I("purple"))%>%
+    add_trace(x=~week,y=~aH3,type="bar",name="A(H3N2)", color =I("red"))%>%
+    add_trace(x=~week,y=~aH1N1,type="bar",name="A(H1N1)pdm09", color =I("orange"))%>%
+    add_trace(x=~week,y=~aSubtypyingNotPerformed,type="bar",name="A(subtyping not performed)", color =I("yellow"))%>% 
+    
     layout( title = 'Influenza Positive Tests Reported to CDC by US-Public Health Lab, National Summary 2017-2018',xaxis= list(title = 'Weeks'),yaxis = list(title = 'Number of Positive Specimens '), barmode = "stack",font=t)
  p2
   }
@@ -200,13 +201,21 @@ library(usmap)
 
 heatMap_csv <- read.csv(file.choose())
 region <- tolower(heatMap_csv$STATENAME)
+heatMap_csv$STATENAME<-tolower( heatMap_csv$STATENAME)
+integerActivityLevel <-as.numeric( substr( heatMap_csv$ACTIVITY.LEVEL, 6, 8 ))
+total <- data.frame(heatMap_csv,integerActivityLevel)
+write.csv(total,"heatMap_edited.csv")
+editedHeatmapCsv <- read.csv("heatMap_edited.csv")
+editedHeatmapCsv$STATENAME <- tolower(editedHeatmapCsv$STATENAME)
+uniqueStates<-unique(editedHeatmapCsv$STATENAME)
+statesAverageActivity<- aggregate(.~STATENAME, data =editedHeatmapCsv, mean)
+data<- statesAverageActivity[,c("STATENAME","ACTIVITY.LEVEL")]
+#total<- c(uniqueStates,statesAverageActivity)
+names(data ) <-c("state","activity")
+dfTotal <-data.frame(data)
+dfTotal
 
-head(region)
-as.numeric( substr( heatMap_csv$ACTIVITY.LEVEL, 6, 8 ))
-total <- data.frame(region,as.numeric( substr( heatMap_csv$ACTIVITY.LEVEL, 6, 8 )))
-names(total ) <-c("state","activity")
-head(total)
-plot_usmap(data = total, values = "activity", lines = "black", regions = "states", labels = TRUE) +
+plot_usmap(data = dfTotal, values = "activity", lines = "black", regions = "states", labels = TRUE) +
   scale_fill_continuous(
     low = "white", high = "red", name = "ILI Activity Level", label = scales::comma
   ) + theme(legend.position = "right") + labs(title = "2018-19 Influenza Season Week 8 ending Feb 23, 2019")
