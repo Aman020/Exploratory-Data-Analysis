@@ -1,3 +1,5 @@
+install.packages(shiny)
+
 library(shiny)
 
 ui <- pageWithSidebar(
@@ -8,10 +10,6 @@ ui <- pageWithSidebar(
   # Sidebar panel for inputs ----
   sidebarPanel(
     selectInput("keyword","Please choose one of the following keywords", choices = c("flu","#flu","influenza","all"))
-    
-    
-    
-    
   ),
   
   
