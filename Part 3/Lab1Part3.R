@@ -154,20 +154,20 @@ latlong<-revgeocode(location = df , output='address')
 head(state_freq)
 plotHeatMap_USMmap(data = state_freq, "flu")
 
-tweetsFlu <- getAndSaveTweets("flu",15000,twitter_token,"Twitter_data/raw_15k_flu_2mar.csv" )
-tweetsHashFlu <- getAndSaveTweets("#flu",15000,twitter_token,"Twitter_data/raw_15k_HashFlu_2mar.csv" )
-tweetsInfluenza <- getAndSaveTweets("influenza",15000,twitter_token,"Twitter_data/raw_15k_influenza_2mar.csv" )
+tweetsFlu <- getAndSaveTweets("flu",15000,twitter_token,"Part 3/Twitter_data/raw_15k_flu_2mar.csv" )
+tweetsHashFlu <- getAndSaveTweets("#flu",15000,twitter_token,"Part 3/Twitter_data/raw_15k_HashFlu_2mar.csv" )
+tweetsInfluenza <- getAndSaveTweets("influenza",15000,twitter_token,"Part 3/Twitter_data/raw_15k_influenza_2mar.csv" )
 
-tweetsFlu <-read.csv("Twitter_data/raw_15k_flu_2mar.csv")
+tweetsFlu <-read.csv("Part 3/Twitter_data/raw_15k_flu_2mar.csv")
 
 #---------------------Cleaning the data and getting the geocodes. Saving it in a file------------------
-cleanTweetsFlu <- cleanAndSaveGeocodedTweets(tweetsFlu,"Twitter_data/clean_15k_flu_2mar.csv")
-cleanTweetsHashFlu <- cleanAndSaveGeocodedTweets(tweetsHashFlu,"Twitter_data/clean_15k_hash_flu_2mar.csv")
-cleanTweetsInfluenza <- cleanAndSaveGeocodedTweets(tweetsInfluenza,"Twitter_data/clean_15k_influenza_2mar.csv")
+cleanTweetsFlu <- cleanAndSaveGeocodedTweets(tweetsFlu,"Part 3/Twitter_data/clean_15k_flu_2mar.csv")
+cleanTweetsHashFlu <- cleanAndSaveGeocodedTweets(tweetsHashFlu,"Part 3/Twitter_data/clean_15k_hash_flu_2mar.csv")
+cleanTweetsInfluenza <- cleanAndSaveGeocodedTweets(tweetsInfluenza,"Part 3/Twitter_data/clean_15k_influenza_2mar.csv")
 
-cleanTweetsFlu <-read.csv("Twitter_data/clean_15k_flu_2mar.csv")
-cleanTweetsHashFlu <- read.csv("Twitter_data/clean_15k_hash_flu_2mar.csv")
-cleanTweetsInfluenza <-read.csv("Twitter_data/clean_15k_influenza_2mar.csv")
+cleanTweetsFlu <-read.csv("Part 3/Twitter_data/clean_15k_flu_2mar.csv")
+cleanTweetsHashFlu <- read.csv("Part 3/Twitter_data/clean_15k_hash_flu_2mar.csv")
+cleanTweetsInfluenza <-read.csv("Part 3/Twitter_data/clean_15k_influenza_2mar.csv")
 
 #---------------------Plotting geocodes of  all the tweets collected using search query as flu----------
 #dfGeodataTweetsFluStateFreq<-getStateFrequency(cleanTweetsFlu)
@@ -196,11 +196,11 @@ allGeodata <- mergeGeocode(cleanTweetsFlu,cleanTweetsInfluenza,cleanTweetsHashFl
 #allGeodataStateFreq<-getStateFrequency(allGeodata)
 allGeodataStateFreq<-getStateFrequencyRevGeo(allGeodata)
 
-write.csv(allGeodataStateFreq, file = "/Users/aman/R/Lab1EDA/Twitter_data/US_State_Frequency_2mar.csv",row.names=FALSE, na="")
-allGeodataStateFreq<-read.csv("/Users/aman/R/Lab1EDA/Twitter_data/US_State_Frequency_2mar.csv")
+write.csv(allGeodataStateFreq, file = "/Users/aman/R/Exploratory-Data-Analysis/Part 3/Twitter_data/US_State_Frequency_2mar.csv",row.names=FALSE, na="")
+allGeodataStateFreq<-read.csv("/Users/aman/R/Exploratory-Data-Analysis/Part 3/Twitter_data/US_State_Frequency_2mar.csv")
 plotHeatMap_USMmap(allGeodataStateFreq)
 #plotHeatMap(allGeodataStateFreq,allGeodataStateFreq$usStatelocation,allGeodataStateFreq$Freq)
 
 
 
-runApp("/Users/aman/R/Lab1EDA/FluAnalysis")
+runApp("/Users/aman/R/Exploratory-Data-Analysis/FluAnalysis")
