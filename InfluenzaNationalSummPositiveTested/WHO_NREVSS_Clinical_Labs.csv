@@ -1,4 +1,4 @@
-"*Beginning for the 2015-16 season, reports from public health and clinical laboratories are presented separately in the weekly influenza update, FluView. Data from clinical laboratories include the weekly total number of specimens tested, the number of positive influenza test, and the percent positive by influenza type."
+"*Beginning for the 2015-16 season, reports from public health and clinical laboratories are presented separately in the weekly influenza update, FluView. Data from clinical laboratories include the weekly total number of specimens tested, the number of positive influenza test, and the percent positive by influenza type.",,,,,,,,,
 REGION TYPE,REGION,YEAR,WEEK,TOTAL SPECIMENS,TOTAL A,TOTAL B,PERCENT POSITIVE,PERCENT A,PERCENT B
 National,X,2018,40,16492,218,69,1.74024,1.32185,0.418385
 National,X,2018,41,17980,222,81,1.68521,1.23471,0.450501
@@ -17,7 +17,3 @@ National,X,2019,1,44050,5221,135,12.1589,11.8524,0.30647
 National,X,2019,2,40046,4851,209,12.6355,12.1136,0.5219
 National,X,2019,3,40280,6334,168,16.142,15.7249,0.41708
 National,X,2019,4,42324,7881,228,19.1593,18.6206,0.538701
-National,X,2019,5,46593,10188,263,22.4304,21.8659,0.564462
-National,X,2019,6,51563,12464,393,24.9345,24.1724,0.762174
-National,X,2019,7,43584,11122,310,26.2298,25.5185,0.71127
-National,X,2019,8,39107,10027,289,26.3789,25.6399,0.738998

@@ -7,15 +7,11 @@ ui <- pageWithSidebar(
 
   # Sidebar panel for inputs ----
   sidebarPanel(
-    selectInput("keyword","Please choose one of the following keywords", choices = c("flu","#flu","influenza","all"))
-    
-    
-    
+    selectInput("keyword","Please choose one of the following keywords",
+                choices = c("flu","#flu","influenza","all"))
     
   ),
   
-  
-
   # Main panel for displaying outputs ----
   mainPanel(
     img(src="latest_heatmap.png", align = "right",height=400,width=550),
@@ -52,3 +48,9 @@ server <- function(input, output) {
 }
 
 shinyApp(ui, server)
+
+
+
+
+
+
