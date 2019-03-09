@@ -146,8 +146,6 @@ plotHeatMap_USMmap <- function(data, searchString)
  }
 
 
-head(cleanTweetsFlu)
-
 df <- c(cleanTweetsFlu$lon,cleanTweetsFlu$lat)
 latlong<-revgeocode(location = df , output='address')
 
@@ -200,7 +198,5 @@ write.csv(allGeodataStateFreq, file = "/Users/aman/R/Exploratory-Data-Analysis/P
 allGeodataStateFreq<-read.csv("/Users/aman/R/Exploratory-Data-Analysis/Part 3/Twitter_data/US_State_Frequency_2mar.csv")
 plotHeatMap_USMmap(allGeodataStateFreq)
 #plotHeatMap(allGeodataStateFreq,allGeodataStateFreq$usStatelocation,allGeodataStateFreq$Freq)
-
-
 
 runApp("/Users/aman/R/Exploratory-Data-Analysis/FluAnalysis")
