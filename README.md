@@ -20,7 +20,7 @@ Here are the preliminary requirements for this project.
 3. R community has created a package for working with Twitter data called “twitteR”. Read the vignette by Jeff Gentry ***[12]*** about the package he contributed. Work on the vignette.
 
 
-## Part 1:
+## Part 1: R
 Get familier with R and R studio. Run all the sample code.
 
 ## Part 2: Creation of charts
