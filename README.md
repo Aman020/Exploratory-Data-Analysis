@@ -86,7 +86,7 @@ geo-search.html, last viewed 2019.
 
 ## Credits
 
-This project contains scripts and other related material that is developed at University of Buffalo, The State University of New York.
+This project contains material that is developed at University of Buffalo, The State University of New York.
 
 
 ## Acknowledgement
