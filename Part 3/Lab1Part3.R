@@ -21,12 +21,12 @@ library(usmap)
 library(r)
 library(stringr)
 
-apiKey<- "XcHOAVRMJa0PnGMhBKsbZOF3W"
-apiSecretKey <- "06gmf6S12GbulHThDQA3AlWB5el2e8HbVrYdlqIHKp6vTf2ucf"
-accessToken<-"897511905970987008-WdYbvfk4wKWlUceed1EFLvXpaNhw4gJ"
-accessTokenSecret<-"MXp4vCe3eHKPQREFkNI4BlBoeNqgqi4QGNpzZd79At8fV"
-register_google(key = 'AIzaSyBChIhz8FzwkvhgiJEC4fFqgMuXpMEofAM')
-twitter_token <- create_token(app = "Flu-Analysis-EDA", consumer_key = "XcHOAVRMJa0PnGMhBKsbZOF3W",consumer_secret = "06gmf6S12GbulHThDQA3AlWB5el2e8HbVrYdlqIHKp6vTf2ucf")
+apiKey<- "your api key"
+apiSecretKey <- "your api key"
+accessToken<-"your api key"
+accessTokenSecret<-"your api key"
+register_google(key = 'your api key')
+twitter_token <- create_token(app = "Flu-Analysis-EDA", consumer_key = "your api key",consumer_secret = "your api key")
 #----- All the utility functions ------------
 
 
